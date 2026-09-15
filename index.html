@@ -14,10 +14,6 @@
       --blue-deep: #173f63;
       --gold: #f4bb45;
       --paper: #fffdf7;
-      --mist: #edf3f7;
-      --line: #d6e1e8;
-      --success: #18735d;
-      --danger: #b5443d;
     }
     * { box-sizing: border-box; }
     body { font-family: "DM Sans", sans-serif; color: var(--ink); }
@@ -49,7 +45,7 @@
      <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
       <div>
        <p class="text-sm font-semibold tracking-[0.13em] uppercase text-[#dcecf5]">English Grammar</p>
-       <h1 class="title-font mt-1 text-3xl leading-tight">Verb Study Practice</h1>
+       <h1 class="title-font mt-1 text-3xl leading-tight">Verb Study &amp; Pronunciation</h1>
       </div>
      </div>
     </div>
@@ -62,10 +58,13 @@
       <button class="tab-button px-3 py-4 text-sm font-bold text-[#416078]" type="button" data-tab="quiz">Practice</button>
      </div>
     </nav>
+    
+    <!-- Table Panel -->
     <section id="table-panel" class="tab-panel active">
      <div class="paper-grid rounded-2xl border border-[#d6e1e8] overflow-hidden shadow-sm">
       <div class="p-5 sm:p-7 border-b border-[#d6e1e8] bg-white/85">
        <h2 class="title-font text-2xl text-[#173f63]">Master Verb List</h2>
+       <p class="text-xs text-[#587084] mt-1">Click any audio icon to hear pronunciation.</p>
       </div>
       <div class="overflow-x-auto">
        <table class="w-full min-w-[680px] text-left">
@@ -76,6 +75,7 @@
           <th class="px-5 py-4 text-sm font-bold">Past Tense</th>
           <th class="px-5 py-4 text-sm font-bold">Past Participle</th>
           <th class="px-5 py-4 text-sm font-bold">Present Participle</th>
+          <th class="px-5 py-4 text-sm font-bold text-center">Listen</th>
          </tr>
         </thead>
         <tbody id="verb-table-body"></tbody>
@@ -83,14 +83,21 @@
       </div>
      </div>
     </section>
+
+    <!-- Flashcards Panel -->
     <section id="cards-panel" class="tab-panel">
      <div class="paper-grid rounded-2xl border border-[#d6e1e8] p-5 sm:p-8 shadow-sm">
-      <button id="flashcard" class="flashcard block w-full max-w-2xl mx-auto mt-7 text-center" type="button">
+      <div id="flashcard" class="flashcard block w-full max-w-2xl mx-auto mt-7 text-center">
        <div class="flash-inner">
         <div class="flash-face bg-[#245985] text-white border-4 border-[#173f63] shadow-lg">
          <span class="text-xs font-bold uppercase tracking-[0.17em] text-[#dcecf5]">Base Form</span> 
-         <strong id="flash-present" class="title-font mt-4 text-5xl sm:text-6xl"></strong> 
-         <span class="mt-7 text-sm text-[#fff4cf]">Tap to reveal</span>
+         <div class="flex items-center gap-3 mt-4">
+           <strong id="flash-present" class="title-font text-5xl sm:text-6xl"></strong>
+           <button type="button" id="flash-speak-btn" class="p-2 rounded-full bg-white/10 hover:bg-white/20 text-[#f4bb45] transition" title="Listen">
+             <i data-lucide="volume-2" width="28" height="28"></i>
+           </button>
+         </div>
+         <span class="mt-7 text-sm text-[#fff4cf]">Tap card to flip</span>
         </div>
         <div class="flash-face flash-back bg-[#fff8df] text-[#173f63] border-4 border-[#ecd184] shadow-lg">
          <div class="grid grid-cols-3 gap-4 w-full mt-6">
@@ -100,7 +107,7 @@
          </div>
         </div>
        </div>
-      </button>
+      </div>
       <div class="flex items-center justify-center gap-4 mt-6">
        <button class="inline-flex items-center gap-2 rounded-lg bg-[#e6eef3] px-4 py-3 font-bold text-[#173f63] hover:bg-[#d6e1e8]" id="previous-card"><i data-lucide="arrow-left" width="18" height="18"></i> Previous</button>
        <p id="card-count" class="text-sm font-bold text-[#567085]"></p>
@@ -108,12 +115,19 @@
       </div>
      </div>
     </section>
+
+    <!-- Quiz Panel -->
     <section id="quiz-panel" class="tab-panel">
      <div class="paper-grid rounded-2xl border border-[#d6e1e8] p-5 sm:p-8 shadow-sm">
       <div class="max-w-2xl mx-auto mt-7">
-       <div class="rounded-xl bg-[#173f63] text-white px-6 py-7 text-center shadow-md">
+       <div class="rounded-xl bg-[#173f63] text-white px-6 py-7 text-center shadow-md relative">
         <p id="quiz-prompt-type" class="text-xs font-bold uppercase tracking-[0.16em] text-[#dcecf5]"></p>
-        <p id="quiz-question" class="title-font mt-3 text-3xl sm:text-4xl"></p>
+        <div class="flex items-center justify-center gap-3 mt-3">
+          <p id="quiz-question" class="title-font text-3xl sm:text-4xl"></p>
+          <button type="button" id="quiz-speak-btn" class="p-2 rounded-full bg-white/10 hover:bg-white/20 text-[#f4bb45] transition" title="Listen">
+            <i data-lucide="volume-2" width="24" height="24"></i>
+          </button>
+        </div>
        </div>
        <form id="typing-form" class="mt-5">
         <input id="typing-answer" class="mt-2 w-full rounded-xl border-2 border-[#d6e1e8] bg-white px-5 py-4 text-lg text-[#173f63] outline-none focus:border-[#245985]" type="text" autocomplete="off" spellcheck="false" placeholder="Type your answer here..."> 
@@ -128,8 +142,8 @@
     </section>
    </main>
   </div>
+
   <script>
-    /* I removed the local backend SDK script tags from your previous setup so this code can run smoothly on GitHub Pages without console errors! */
     const verbs = [
       { verb: "accept", past: "accepted", participle: "accepted", ing: "accepting" },
       { verb: "act", past: "acted", participle: "acted", ing: "acting" },
@@ -202,6 +216,18 @@
     let cardIndex = 0;
     let activeQuestion = null;
 
+    // Web Speech API function for audio pronunciation
+    function speak(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel(); // Stop any ongoing speech
+        const cleanText = text.replace(/\(.*\)/, '').trim(); // Remove parenthetical notes
+        const utterance = new SpeechSynthesisUtterance(cleanText);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.85; // Slightly slower speed for language learners
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
     function renderTable() {
       const table = document.getElementById("verb-table-body");
       verbs.forEach((item, index) => {
@@ -212,7 +238,12 @@
           <td class="px-5 py-3.5 font-semibold">${item.verb}</td>
           <td class="px-5 py-3.5">${item.past}</td>
           <td class="px-5 py-3.5">${item.participle}</td>
-          <td class="px-5 py-3.5">${item.ing}</td>`;
+          <td class="px-5 py-3.5">${item.ing}</td>
+          <td class="px-5 py-3.5 text-center">
+            <button class="p-1.5 rounded-full text-[#245985] hover:bg-[#245985]/10 transition" onclick="speak('${item.verb}')" title="Listen">
+              <i data-lucide="volume-2" width="18" height="18"></i>
+            </button>
+          </td>`;
         table.appendChild(row);
       });
     }
@@ -262,6 +293,10 @@
       const feedback = document.getElementById("quiz-feedback");
       feedback.textContent = isCorrect ? "Excellent — that is correct!" : "Not quite. The correct answer is “" + activeQuestion.correctAnswer + "”.";
       feedback.className = "min-h-7 mt-5 text-center font-bold " + (isCorrect ? "text-[#18735d]" : "text-[#b5443d]");
+      
+      // Auto-pronounce the answer upon checking
+      speak(activeQuestion.correctAnswer);
+      
       document.getElementById("next-question").classList.remove("hidden");
     }
 
@@ -273,8 +308,19 @@
       });
     });
 
-    document.getElementById("flashcard").addEventListener("click", () => {
-      document.getElementById("flashcard").classList.toggle("is-revealed");
+    document.getElementById("flashcard").addEventListener("click", (e) => {
+      if (!e.target.closest('#flash-speak-btn')) {
+        document.getElementById("flashcard").classList.toggle("is-revealed");
+      }
+    });
+
+    document.getElementById("flash-speak-btn").addEventListener("click", (e) => {
+      e.stopPropagation();
+      speak(verbs[cardIndex].verb);
+    });
+
+    document.getElementById("quiz-speak-btn").addEventListener("click", () => {
+      if (activeQuestion) speak(activeQuestion.item.verb);
     });
     
     document.getElementById("previous-card").addEventListener("click", () => {
